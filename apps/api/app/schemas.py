@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
@@ -24,6 +24,9 @@ class UserOut(BaseModel):
     role: str
     points_balance: int
     org_id: Optional[int] = None
+    org_name: Optional[str] = None
+    org_industry: Optional[str] = None
+    org_tier: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -98,6 +101,92 @@ class AdminUserOut(BaseModel):
     role: str
     points_balance: int
     is_active: bool
+    org_id: Optional[int] = None
+    org_name: Optional[str] = None
 
     class Config:
         from_attributes = True
+
+
+class ContractOut(BaseModel):
+    id: int
+    contract_no: str
+    title: str
+    points_quota: int
+    points_used: int
+    amount_cny_fen: int
+    status: str
+    sla_level: str
+    org_name: Optional[str] = None
+    start_at: Optional[str] = None
+    end_at: Optional[str] = None
+
+
+class OrderOut(BaseModel):
+    id: int
+    order_no: str
+    order_type: str
+    status: str
+    title: str
+    amount_cny_fen: int
+    points: int
+    org_name: Optional[str] = None
+    user_email: Optional[str] = None
+    created_at: str
+
+
+class ContractApplyRequest(BaseModel):
+    company_name: str
+    contact_name: str
+    contact_phone: str
+    use_case: str
+    requested_points: int = Field(ge=10000)
+
+
+class ApplicationOut(BaseModel):
+    id: int
+    company_name: str
+    contact_name: str
+    use_case: str
+    requested_points: int
+    status: str
+    org_name: Optional[str] = None
+    created_at: str
+
+
+class DayStat(BaseModel):
+    date: str
+    total: int
+    success: int
+    points: int
+
+
+class SkuStat(BaseModel):
+    sku: str
+    count: int
+    points: int
+
+
+class DashboardOut(BaseModel):
+    total_users: int
+    total_orgs: int
+    active_contracts: int
+    total_calls: int
+    success_rate: float
+    total_revenue_fen: int
+    total_points_consumed: int
+    calls_by_day: List[DayStat]
+    calls_by_sku: List[SkuStat]
+    recent_orders: List[OrderOut]
+
+
+class CustomerOut(BaseModel):
+    org_id: int
+    org_name: str
+    industry: Optional[str]
+    tier: str
+    contact_name: Optional[str]
+    member_count: int
+    total_calls: int
+    points_consumed: int
+    active_contracts: int

@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/catalog", label: "API 目录" },
+  { href: "/solutions", label: "解决方案" },
+  { href: "/pricing", label: "定价" },
   { href: "/playground", label: "Playground" },
-  { href: "/console", label: "控制台" },
 ];
 
 export function Navbar() {
@@ -25,7 +26,7 @@ export function Navbar() {
             <span className="ml-2 hidden text-xs font-normal text-slate-500 sm:inline">Pet AI API</span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm text-slate-600 md:flex">
+        <nav className="hidden items-center gap-5 text-sm text-slate-600 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -38,22 +39,19 @@ export function Navbar() {
               {l.label}
             </Link>
           ))}
-          <Link href="/admin" className="text-slate-400 hover:text-slate-600">
-            管理
-          </Link>
         </nav>
         <div className="flex items-center gap-2">
           <Link
-            href="/login"
-            className="rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+            href="/console"
+            className="hidden rounded-lg border border-teal-200 px-3 py-2 text-sm text-teal-700 hover:bg-teal-50 sm:inline"
           >
-            登录
+            客户控制台
           </Link>
           <Link
-            href="/console"
-            className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700"
+            href="/admin"
+            className="rounded-lg bg-slate-800 px-3 py-2 text-sm font-medium text-white hover:bg-slate-900"
           >
-            开始使用
+            运营后台
           </Link>
         </div>
       </div>

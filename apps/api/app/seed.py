@@ -57,6 +57,9 @@ def main():
                 )
         db.commit()
         print("Seed complete.")
+        from app.seed_rich import seed_rich_if_needed
+
+        seed_rich_if_needed()
     finally:
         db.close()
 

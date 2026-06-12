@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import Base, engine
-from app.routers import auth, keys, open_api, platform
+from app.routers import admin, auth, keys, open_api, platform
 
 
 def _init_db() -> None:
@@ -32,6 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(admin.router)
 app.include_router(auth.router)
 app.include_router(keys.router)
 app.include_router(platform.router)

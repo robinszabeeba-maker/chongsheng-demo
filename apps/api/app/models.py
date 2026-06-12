@@ -46,10 +46,93 @@ class Organization(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255))
+    industry: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    tier: Mapped[str] = mapped_column(String(32), default="standard")
+    contact_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    contact_phone: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     members: Mapped[List[User]] = relationship(back_populates="org")
     api_keys: Mapped[List["ApiKey"]] = relationship(back_populates="org")
+    contracts: Mapped[List["Contract"]] = relationship(back_populates="org")
+    orders: Mapped[List["Order"]] = relationship(back_populates="org")
+
+
+class ContractStatus(str, enum.Enum):
+    pending = "pending"
+    active = "active"
+    expired = "expired"
+
+
+class Contract(Base):
+    __tablename__ = "contracts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    org_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"))
+    contract_no: Mapped[str] = mapped_column(String(32), unique=True)
+    title: Mapped[str] = mapped_column(String(255))
+    points_quota: Mapped[int] = mapped_column(Integer)
+    points_used: Mapped[int] = mapped_column(Integer, default=0)
+    amount_cny_fen: Mapped[int] = mapped_column(Integer)
+    status: Mapped[ContractStatus] = mapped_column(Enum(ContractStatus), default=ContractStatus.pending)
+    sla_level: Mapped[str] = mapped_column(String(32), default="standard")
+    start_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    end_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    org: Mapped[Organization] = relationship(back_populates="contracts")
+
+
+class OrderType(str, enum.Enum):
+    package = "package"
+    contract = "contract"
+    enterprise_deposit = "enterprise_deposit"
+
+
+class OrderStatus(str, enum.Enum):
+    paid = "paid"
+    pending = "pending"
+    cancelled = "cancelled"
+
+
+class Order(Base):
+    __tablename__ = "orders"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    order_no: Mapped[str] = mapped_column(String(32), unique=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    org_id: Mapped[Optional[int]] = mapped_column(ForeignKey("organizations.id"), nullable=True)
+    order_type: Mapped[OrderType] = mapped_column(Enum(OrderType))
+    status: Mapped[OrderStatus] = mapped_column(Enum(OrderStatus), default=OrderStatus.paid)
+    amount_cny_fen: Mapped[int] = mapped_column(Integer)
+    points: Mapped[int] = mapped_column(Integer, default=0)
+    title: Mapped[str] = mapped_column(String(255))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    org: Mapped[Optional[Organization]] = relationship(back_populates="orders")
+
+
+class ApplicationStatus(str, enum.Enum):
+    pending = "pending"
+    approved = "approved"
+    rejected = "rejected"
+
+
+class ContractApplication(Base):
+    __tablename__ = "contract_applications"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    org_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    company_name: Mapped[str] = mapped_column(String(255))
+    contact_name: Mapped[str] = mapped_column(String(100))
+    contact_phone: Mapped[str] = mapped_column(String(32))
+    use_case: Mapped[str] = mapped_column(String(500))
+    requested_points: Mapped[int] = mapped_column(Integer)
+    status: Mapped[ApplicationStatus] = mapped_column(
+        Enum(ApplicationStatus), default=ApplicationStatus.pending
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
 class ApiKey(Base):

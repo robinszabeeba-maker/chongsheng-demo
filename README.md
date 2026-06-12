@@ -11,7 +11,17 @@ docs/         商业文档（MRD/PRD/API Catalog）
 Demo_PRD_v1.md  Demo 范围冻结
 ```
 
-## 本地开发（macOS · 推荐，无需 Docker）
+## Demo v2 丰富数据
+
+首次升级 v2 后，请 **重启 API** 并删除旧库以加载 30 天调用、合同、订单等演示数据：
+
+```bash
+rm -f apps/api/chongsheng.db
+./scripts/dev-api.sh
+```
+
+新增账号：`enterprise@chongsheng.demo` / `Ent123!`
+
 
 **需要两个终端窗口**，不要整段粘贴到同一个终端。
 
