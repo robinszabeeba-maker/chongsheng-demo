@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+apps/web/.next/
+apps/web/out/
+
+# Python
+apps/api/.venv/
+apps/api/__pycache__/
+**/__pycache__/
+*.py[cod]
+*.db
+
+# Env & secrets
+.env
+.env.local
+.env.*.local
+apps/api/.env
+apps/api/chongsheng.db
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Vercel / Railway local
+.vercel
+.railway
